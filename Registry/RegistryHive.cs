@@ -100,7 +100,7 @@ namespace Registry
 
                 keyCount += 1;
 
-                sw.WriteLine("key|{0}|{1}|{2}|{3}", subkey.NkRecord.IsFree ? "U" : "A", subkey.NkRecord.AbsoluteOffset, subkey.KeyPath, subkey.LastWriteTime.Value.UtcDateTime.ToString("o"));
+                sw.WriteLine("key|{0}|{1}|{2}|{3:o}", subkey.NkRecord.IsFree ? "U" : "A", subkey.NkRecord.AbsoluteOffset, subkey.KeyPath, subkey.LastWriteTime.UtcDateTime);
 
                 foreach (var val in subkey.Values)
                 {
@@ -542,7 +542,7 @@ namespace Registry
                     if (Root.LastWriteTime != null)
                     {
                         keyCount = 1;
-                        sw.WriteLine("key|{0}|{1}|{2}|{3}", Root.NkRecord.IsFree ? "U" : "A", Root.NkRecord.AbsoluteOffset, Root.KeyPath, Root.LastWriteTime.Value.UtcDateTime.ToString("o"));
+                        sw.WriteLine("key|{0}|{1}|{2}|{3:o}", Root.NkRecord.IsFree ? "U" : "A", Root.NkRecord.AbsoluteOffset, Root.KeyPath, Root.LastWriteTime.UtcDateTime);
                     }
 
                     foreach (var val in Root.Values)
@@ -578,7 +578,7 @@ namespace Registry
                             var nk = keyValuePair.Value as NkCellRecord;
                             var key = new RegistryKey(nk, null);
 
-                            sw.WriteLine("key|{0}|{1}|{2}|{3}", key.NkRecord.IsFree ? "U" : "A", key.NkRecord.AbsoluteOffset, key.KeyName, key.LastWriteTime.Value.UtcDateTime.ToString("o"));
+                            sw.WriteLine("key|{0}|{1}|{2}|{3:o}", key.NkRecord.IsFree ? "U" : "A", key.NkRecord.AbsoluteOffset, key.KeyName, key.LastWriteTime.UtcDateTime);
 
                             DumpKeyCommonFormat(key, sw, ref keyCountDeleted, ref valueCountDeleted);
                         }

@@ -83,7 +83,7 @@ namespace Registry.Abstractions
         /// <summary>
         ///     The last write time of this key
         /// </summary>
-        public DateTimeOffset? LastWriteTime => NkRecord.LastWriteTimestamp;
+        public DateTimeOffset LastWriteTime => NkRecord.LastWriteTimestamp;
 
         /// <summary>
         ///     The underlying NKRecord for this Key. This allows access to all info about the NK Record
@@ -142,7 +142,7 @@ namespace Registry.Abstractions
 
             sb.AppendLine();
             sb.AppendLine(keyName);
-            sb.AppendLine($";Last write timestamp {LastWriteTime.Value.UtcDateTime.ToString("o")}");
+            sb.AppendLine($";Last write timestamp {LastWriteTime.UtcDateTime:o}");
 
             //sb.AppendLine($";Last write timestamp {LastWriteTime.Value.UtcDateTime.ToString("o")}");
 

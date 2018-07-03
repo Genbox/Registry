@@ -374,12 +374,12 @@ namespace Registry.Test
 
             Check.That(key).IsNotNull();
 
-            Check.That(key.LastWriteTime.Value.Year).IsEqualTo(2011);
-            Check.That(key.LastWriteTime.Value.Month).IsEqualTo(9);
-            Check.That(key.LastWriteTime.Value.Day).IsEqualTo(19);
-            Check.That(key.LastWriteTime.Value.Hour).IsEqualTo(19);
-            Check.That(key.LastWriteTime.Value.Minute).IsEqualTo(2);
-            Check.That(key.LastWriteTime.Value.Second).IsEqualTo(8);
+            Check.That(key.LastWriteTime.Year).IsEqualTo(2011);
+            Check.That(key.LastWriteTime.Month).IsEqualTo(9);
+            Check.That(key.LastWriteTime.Day).IsEqualTo(19);
+            Check.That(key.LastWriteTime.Hour).IsEqualTo(19);
+            Check.That(key.LastWriteTime.Minute).IsEqualTo(2);
+            Check.That(key.LastWriteTime.Second).IsEqualTo(8);
 
             key = newReg.GetKey(@"Local Settings\MuiCache\6\52C64B7E");
 
