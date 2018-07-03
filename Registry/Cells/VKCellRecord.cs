@@ -581,12 +581,12 @@ namespace Registry.Cells
                             //make sure we have enough data
                             if (RawBytes.Length >= NameLength + 0x18)
                             {
-                                valName = Encoding.GetEncoding(1252).GetString(RawBytes, 0x18, NameLength);
+                                valName = Encodings.Encoding1252.GetString(RawBytes, 0x18, NameLength);
                             }
                         }
                         else
                         {
-                            valName = Encoding.GetEncoding(1252).GetString(RawBytes, 0x18, NameLength);
+                            valName = Encodings.Encoding1252.GetString(RawBytes, 0x18, NameLength);
                         }
                     }
                     else

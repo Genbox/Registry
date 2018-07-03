@@ -123,7 +123,7 @@ namespace Registry.Cells
             //  if (Flags.ToString().Contains(FlagEnum.CompressedName.ToString()))
             if ((Flags & FlagEnum.CompressedName) == FlagEnum.CompressedName)
             {
-                Name = Encoding.GetEncoding(1252).GetString(rawBytes, 0x50, NameLength);
+                Name = Encodings.Encoding1252.GetString(rawBytes, 0x50, NameLength);
             }
             else
             {

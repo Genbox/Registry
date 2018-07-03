@@ -152,7 +152,7 @@ namespace Registry.Cells
                     {
                         if (RawBytes.Length >= 0x50 + NameLength)
                         {
-                            name = Encoding.GetEncoding(1252).GetString(RawBytes, 0x50, NameLength);
+                            name = Encodings.Encoding1252.GetString(RawBytes, 0x50, NameLength);
                         }
                         else
                         {
@@ -161,7 +161,7 @@ namespace Registry.Cells
                     }
                     else
                     {
-                        name = Encoding.GetEncoding(1252).GetString(RawBytes, 0x50, NameLength);
+                        name = Encodings.Encoding1252.GetString(RawBytes, 0x50, NameLength);
                     }
                 }
                 else
@@ -341,7 +341,7 @@ namespace Registry.Cells
 
         public long RelativeOffset { get; }
 
-        public string Signature => Encoding.GetEncoding(1252).GetString(RawBytes, 4, 2);
+        public string Signature => Encodings.Encoding1252.GetString(RawBytes, 4, 2);
 
         public int Size => Math.Abs(BitConverter.ToInt32(RawBytes, 0));
 

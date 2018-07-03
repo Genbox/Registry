@@ -8,7 +8,7 @@ namespace Registry
     {
         public TransactionLogEntry(byte[] rawBytes)
         {
-            var sig = Encoding.GetEncoding(1252).GetString(rawBytes, 0, 4);
+            var sig = Encodings.Encoding1252.GetString(rawBytes, 0, 4);
 
             if (sig != "HvLE")
             {
@@ -61,7 +61,7 @@ namespace Registry
 
             //should be sitting at hbin
 
-            var hbinsig = Encoding.GetEncoding(1252).GetString(rawBytes, index, 4);
+            var hbinsig = Encodings.Encoding1252.GetString(rawBytes, index, 4);
 
             if (hbinsig != "hbin")
             {

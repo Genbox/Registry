@@ -168,7 +168,7 @@ namespace Registry
 
             while (index < FileBytes.Length)
             {
-                var sig = Encoding.GetEncoding(1252).GetString(FileBytes, index, 4);
+                var sig = Encodings.Encoding1252.GetString(FileBytes, index, 4);
 
                 if (sig != "HvLE")
                 {

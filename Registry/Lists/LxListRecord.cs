@@ -58,7 +58,7 @@ namespace Registry.Lists
                     if (Signature == "lf")
                     {
                         //first 4 chars of string
-                        hash = Encoding.GetEncoding(1252).GetString(RawBytes, index, 4);
+                        hash = Encodings.Encoding1252.GetString(RawBytes, index, 4);
                     }
                     else
                     {
