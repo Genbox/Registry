@@ -149,7 +149,7 @@ namespace Registry.Abstractions
             foreach (var keyValue in Values)
             {
                 var keyNameOut = keyValue.ValueName;
-                if (keyNameOut.ToLowerInvariant() == "(default)")
+                if (keyNameOut.Equals("(default)", StringComparison.OrdinalIgnoreCase))
                 {
                     keyNameOut = "@";
                 }

@@ -180,8 +180,8 @@ namespace Registry
 
             //get first and second, do the compares
 
-            var logOne = logs.SingleOrDefault(t => t.LogPath.ToLowerInvariant().EndsWith("log1"));
-            var logTwo = logs.SingleOrDefault(t => t.LogPath.ToLowerInvariant().EndsWith("log2"));
+            var logOne = logs.SingleOrDefault(t => t.LogPath.EndsWith("log1", StringComparison.OrdinalIgnoreCase));
+            var logTwo = logs.SingleOrDefault(t => t.LogPath.EndsWith("log2", StringComparison.OrdinalIgnoreCase));
             TransactionLog soloLog = null;
 
             if (logOne != null && logTwo != null)
