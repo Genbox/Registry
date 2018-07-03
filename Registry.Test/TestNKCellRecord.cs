@@ -55,7 +55,7 @@ namespace Registry.Test
 
             Check.That(key.KeyName).IsEqualTo("Domains");
             Check.That(key.KeyPath).IsEqualTo(@"CsiTool-CreateHive-{00000000-0000-0000-0000-000000000000}\SAM\Domains");
-            Check.That(key.LastWriteTime.ToString()).IsEqualTo("7/3/2014 6:05:37 PM +00:00");
+            Check.That(key.LastWriteTime.ToString("u")).IsEqualTo("2014-07-03 18:05:37Z");
             Check.That(key.NkRecord.Size).IsEqualTo(0x58);
             Check.That(key.NkRecord.RelativeOffset).IsEqualTo(0x418);
             Check.That(key.NkRecord.AbsoluteOffset).IsEqualTo(0x1418);
