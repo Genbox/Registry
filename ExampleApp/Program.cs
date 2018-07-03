@@ -93,7 +93,6 @@ namespace ExampleApp
             var rule1 = new LoggingRule("*", loglevel, consoleTarget);
             config.LoggingRules.Add(rule1);
 
-
             return config;
         }
 
@@ -101,8 +100,8 @@ namespace ExampleApp
         {
             var testFiles = new List<string>();
 
-
             var result = Parser.Default.ParseArguments<Options>(args);
+            
             if (!result.Errors.Any())
             {
                 if (result.Value.HiveName == null && result.Value.DirectoryName == null)
