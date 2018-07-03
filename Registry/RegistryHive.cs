@@ -1262,7 +1262,7 @@ namespace Registry
                 return false;
             }
 
-            return s.Length % 4 == 0 && Regex.IsMatch(s, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
+            return s.Length % 4 == 0 && Regex.IsMatch(s, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.Compiled);
         }
 
         public IEnumerable<SearchHit> FindInKeyName(string searchTerm, bool useRegEx = false)

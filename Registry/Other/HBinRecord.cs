@@ -152,7 +152,7 @@ namespace Registry.Other
                 {
                     var foundMatch = false;
 
-                    foundMatch = Regex.IsMatch(cellSignature, @"\A[a-z]{2}\z");
+                    foundMatch = Regex.IsMatch(cellSignature, @"\A[a-z]{2}\z", RegexOptions.Compiled);
 
                     //only process records with 2 letter signatures. this avoids crazy output for data cells
                     if (foundMatch)
