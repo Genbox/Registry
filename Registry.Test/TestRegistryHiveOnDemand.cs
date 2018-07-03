@@ -20,9 +20,7 @@ namespace Registry.Test
         public void GetKeyShouldNotBeNullWithFullPath()
         {
             var samOnDemand = new RegistryHiveOnDemand(@"..\..\..\Hives\SAM");
-            var key =
-                samOnDemand.GetKey(
-                    @"CsiTool-CreateHive-{00000000-0000-0000-0000-000000000000}\SAM\Domains\Account");
+            var key = samOnDemand.GetKey(@"CsiTool-CreateHive-{00000000-0000-0000-0000-000000000000}\SAM\Domains\Account");
 
             Check.That(key).IsNotNull();
         }
@@ -50,9 +48,7 @@ namespace Registry.Test
         {
             var usrClass1OnDemand = new RegistryHiveOnDemand(@"..\..\..\Hives\UsrClass 1.dat");
 
-            var key =
-                usrClass1OnDemand.GetKey(
-                    @"S-1-5-21-2417227394-2575385136-2411922467-1105_Classes\\ActivatableClasses\\Package\\Microsoft.BingSports_3.0.4.244_x64__8wekyb3d8bbwe\\ActivatableClassId");
+            var key = usrClass1OnDemand.GetKey(@"S-1-5-21-2417227394-2575385136-2411922467-1105_Classes\\ActivatableClasses\\Package\\Microsoft.BingSports_3.0.4.244_x64__8wekyb3d8bbwe\\ActivatableClassId");
 
             Check.That(key).IsNotNull();
             Check.That(key.NkRecord.SubkeyCountsStable).IsEqualTo(0x224);
@@ -66,7 +62,7 @@ namespace Registry.Test
 
             binaryReader.BaseStream.Seek(0, SeekOrigin.Begin);
 
-            var fileBytes = binaryReader.ReadBytes((int) binaryReader.BaseStream.Length);
+            var fileBytes = binaryReader.ReadBytes((int)binaryReader.BaseStream.Length);
 
             binaryReader.Close();
             fileStream.Close();
@@ -91,8 +87,7 @@ namespace Registry.Test
         {
             var driversOnDemand = new RegistryHiveOnDemand(@"..\..\..\Hives\DRIVERS");
 
-            var key =
-                driversOnDemand.GetKey(@"{15a87b70-bc78-114a-95b7-b90ca5d0ec00}\DriverDatabase\DeviceIds");
+            var key = driversOnDemand.GetKey(@"{15a87b70-bc78-114a-95b7-b90ca5d0ec00}\DriverDatabase\DeviceIds");
 
             Check.That(key).IsNotNull();
             Check.That(key.SubKeys.Count).IsEqualTo(3878);
@@ -102,7 +97,6 @@ namespace Registry.Test
         public void TestsListRecordsContinued()
         {
             var driversOnDemand = new RegistryHiveOnDemand(@"..\..\..\Hives\DRIVERS");
-
 
             var key = driversOnDemand.GetKey(@"{15a87b70-bc78-114a-95b7-b90ca5d0ec00}");
 
@@ -115,9 +109,7 @@ namespace Registry.Test
         {
             var usrClassFtp = new RegistryHiveOnDemand(@"..\..\..\Hives\UsrClass FTP.dat");
 
-            var key =
-                usrClassFtp.GetKey(
-                    @"S-1-5-21-2417227394-2575385136-2411922467-1105_Classes\ActivatableClasses\CLSID");
+            var key = usrClassFtp.GetKey(@"S-1-5-21-2417227394-2575385136-2411922467-1105_Classes\ActivatableClasses\CLSID");
 
             Check.That(key).IsNotNull();
             Check.That(key.SubKeys.Count).IsEqualTo(2811);

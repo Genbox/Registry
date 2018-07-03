@@ -12,8 +12,7 @@ namespace Registry.Test
         [Test]
         public void ExportToRegFormatNullKey()
         {
-            Check.ThatCode(() => { Helpers.ExportToReg(@"exportTest.reg", null, HiveTypeEnum.Sam, true); })
-                .Throws<NullReferenceException>();
+            Check.ThatCode(() => { Helpers.ExportToReg(@"exportTest.reg", null, HiveTypeEnum.Sam, true); }).Throws<NullReferenceException>();
         }
 
         [Test]
@@ -45,18 +44,14 @@ namespace Registry.Test
             Check.That(exported).IsTrue();
 
             var security = new RegistryHiveOnDemand(@"..\..\..\Hives\SECURITY");
-            key =
-                security.GetKey(
-                    @"CsiTool-CreateHive-{00000000-0000-0000-0000-000000000000}\Policy\Accounts\S-1-5-9");
+            key = security.GetKey(@"CsiTool-CreateHive-{00000000-0000-0000-0000-000000000000}\Policy\Accounts\S-1-5-9");
 
             exported = Helpers.ExportToReg(@"exportsecTest.reg", key, HiveTypeEnum.Security, false);
 
             Check.That(exported).IsTrue();
 
             var systemOnDemand = new RegistryHiveOnDemand(@"..\..\..\Hives\SYSTEM");
-            key =
-                systemOnDemand.GetKey(
-                    @"CsiTool-CreateHive-{00000000-0000-0000-0000-000000000000}\ControlSet001\Enum\ACPI\PNP0C02\1");
+            key = systemOnDemand.GetKey(@"CsiTool-CreateHive-{00000000-0000-0000-0000-000000000000}\ControlSet001\Enum\ACPI\PNP0C02\1");
 
             exported = Helpers.ExportToReg(@"exportsysTest.reg", key, HiveTypeEnum.System, false);
 
@@ -80,9 +75,7 @@ namespace Registry.Test
             usrclassDeleted.RecoverDeleted = true;
             usrclassDeleted.FlushRecordListsAfterParse = false;
             usrclassDeleted.ParseHive();
-            key =
-                usrclassDeleted.GetKey(
-                    @"S-1-5-21-146151751-63468248-1215037915-1000_Classes\Local Settings\Software\Microsoft\Windows\Shell\BagMRU\1");
+            key = usrclassDeleted.GetKey(@"S-1-5-21-146151751-63468248-1215037915-1000_Classes\Local Settings\Software\Microsoft\Windows\Shell\BagMRU\1");
 
             exported = Helpers.ExportToReg(@"exportDeletedTest.reg", key, HiveTypeEnum.UsrClass, false);
 
@@ -115,10 +108,9 @@ namespace Registry.Test
             var en = Helpers.GetEnumValueFromDescription<HiveTypeEnum>(desc);
 
             Check.ThatCode(() =>
-                {
-                    var enBad = Helpers.GetEnumValueFromDescription<int>("NotAnEnum");
-                })
-                .Throws<ArgumentException>();
+            {
+                var enBad = Helpers.GetEnumValueFromDescription<int>("NotAnEnum");
+            }).Throws<ArgumentException>();
 
             Check.That(desc).IsNotEmpty();
             Check.That(desc).Equals("SAM");
@@ -191,7 +183,6 @@ namespace Registry.Test
             Check.That(record.OffsetToOffsets).IsEqualTo(0x78F30);
         }
 
-
         [Test]
         public void ShouldFindLfListRecord()
         {
@@ -227,7 +218,6 @@ namespace Registry.Test
             usrClass1.RecoverDeleted = true;
             usrClass1.FlushRecordListsAfterParse = false;
             usrClass1.ParseHive();
-
 
             var record = usrClass1.ListRecords[0x000000000015f020] as LiListRecord;
 

@@ -24,10 +24,9 @@ namespace Registry.Test
         public void ShouldThrowNullRefExtensionOnNullHive()
         {
             Check.ThatCode(() =>
-                {
-                    var rs = new RegistrySkeleton(null);
-                })
-                .Throws<NullReferenceException>();
+            {
+                var rs = new RegistrySkeleton(null);
+            }).Throws<NullReferenceException>();
         }
 
         [Test]
@@ -128,7 +127,6 @@ namespace Registry.Test
             Check.That(rs.Keys.Count).IsEqualTo(0);
         }
 
-
         [Test]
         public void ShouldReturnFalseOnAddNonExistentSubkeyToSkeletonList()
         {
@@ -151,16 +149,15 @@ namespace Registry.Test
         public void ShouldThrowExceptionIfWriteCalledWithNoKeysAdded()
         {
             Check.ThatCode(() =>
-                {
-                    var usrclassDeleted = new RegistryHive(@"..\..\..\Hives\UsrClassDeletedBags.dat");
-                    usrclassDeleted.RecoverDeleted = true;
-                    usrclassDeleted.FlushRecordListsAfterParse = false;
-                    usrclassDeleted.ParseHive();
+            {
+                var usrclassDeleted = new RegistryHive(@"..\..\..\Hives\UsrClassDeletedBags.dat");
+                usrclassDeleted.RecoverDeleted = true;
+                usrclassDeleted.FlushRecordListsAfterParse = false;
+                usrclassDeleted.ParseHive();
 
-                    var rs = new RegistrySkeleton(usrclassDeleted);
-                    rs.Write(@"foo.reg");
-                })
-                .Throws<InvalidOperationException>(); //ncrunch: no coverage
+                var rs = new RegistrySkeleton(usrclassDeleted);
+                rs.Write(@"foo.reg");
+            }).Throws<InvalidOperationException>(); //ncrunch: no coverage
         }
 
         [Test]
@@ -183,6 +180,7 @@ namespace Registry.Test
         }
 
         [Test]
+
         //[Timeout(360000)] // Not supported in NUnit 3.x
         public void BigRecursiveWithRegUnknown()
         {
@@ -227,8 +225,7 @@ namespace Registry.Test
 
             var rs = new RegistrySkeleton(usrclassDeleted);
 
-            var sk = new SkeletonKeyRoot(@"Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify", true,
-                false);
+            var sk = new SkeletonKeyRoot(@"Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify", true, false);
 
             rs.AddEntry(sk);
 
@@ -276,9 +273,7 @@ namespace Registry.Test
 
             newReg.ParseHive();
 
-            var key =
-                newReg.GetKey(
-                    @"Local Settings\Software\Microsoft\Windows\Shell\Bags\3\Shell\{5C4F28B5-F869-4E84-8E60-F11DB97C5CC7}");
+            var key = newReg.GetKey(@"Local Settings\Software\Microsoft\Windows\Shell\Bags\3\Shell\{5C4F28B5-F869-4E84-8E60-F11DB97C5CC7}");
 
             Check.That(key).IsNotNull();
 
@@ -322,9 +317,7 @@ namespace Registry.Test
             };
             newReg.ParseHive();
 
-            var key =
-                newReg.GetKey(
-                    @"Local Settings\Software\Microsoft\Windows\Shell\BagMRU\0\0");
+            var key = newReg.GetKey(@"Local Settings\Software\Microsoft\Windows\Shell\BagMRU\0\0");
 
             Check.That(key).IsNotNull();
 

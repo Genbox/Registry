@@ -25,6 +25,7 @@ namespace Registry.Test
             Check.That(sk.SecurityDescriptor.Dacl.AceRecords.ToString()).IsNotEmpty();
             Check.That(sk.SecurityDescriptor.Sacl.AceRecords).IsNotNull();
             Check.That(sk.SecurityDescriptor.Sacl.AceRecords.Count).IsEqualTo(0);
+
             // this is a strange case where there is no data to build ace records
             Check.That(sk.SecurityDescriptor.Sacl.AceRecords.ToString()).IsNotEmpty();
 

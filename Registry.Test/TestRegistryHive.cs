@@ -27,7 +27,6 @@ namespace Registry.Test
             Check.That(sam.HardParsingErrors).IsEqualTo(0);
         }
 
-
         [Test]
         public void DeletedFindTest()
         {
@@ -44,7 +43,6 @@ namespace Registry.Test
 
             Check.That(t).IsNotNull();
             Check.That(t.NkRecord.IsDeleted).IsTrue();
-            ;
         }
 
         [Test]
@@ -61,6 +59,7 @@ namespace Registry.Test
         public void HBinSizeShouldNotMatchReadSize()
         {
             var r = new RegistryHive(@"..\..\..\Hives\SAM_DUPENAME");
+
             //if you don't call parse, it wont match
 
             Check.That(r.Header.Length).IsNotEqualTo(r.HBinRecordTotalSize);
@@ -73,7 +72,6 @@ namespace Registry.Test
             r.RecoverDeleted = true;
             r.ParseHive();
         }
-
 
         [Test]
         public void RecoverDeletedShouldBeTrue()
@@ -88,7 +86,6 @@ namespace Registry.Test
             sam.RecoverDeleted = false;
         }
 
-
         [Test]
         public void ShouldExportFileAllRecords()
         {
@@ -101,7 +98,6 @@ namespace Registry.Test
 
             Check.That(usrclassDeleted.Header.Length).IsEqualTo(usrclassDeleted.HBinRecordTotalSize);
         }
-
 
         [Test]
         public void ShouldExportFileDeletedRecords()
@@ -122,7 +118,6 @@ namespace Registry.Test
             var samRootValue = new RegistryHive(@"..\..\..\Hives\SAM_RootValue");
             samRootValue.FlushRecordListsAfterParse = false;
             samRootValue.ParseHive();
-
 
             samRootValue.ExportDataToCommonFormat(@"SamRootValueNoDeletedStuff.txt", false);
         }
@@ -169,7 +164,6 @@ namespace Registry.Test
             usrClass1.FlushRecordListsAfterParse = false;
             usrClass1.ParseHive();
 
-
             var dt = new DateTimeOffset(2014, 11, 13, 15, 51, 17, TimeSpan.FromSeconds(0));
             var hits = usrClass1.FindByLastWriteTime(dt, null).ToList();
 
@@ -197,7 +191,6 @@ namespace Registry.Test
             usrClass1.RecoverDeleted = true;
             usrClass1.FlushRecordListsAfterParse = false;
             usrClass1.ParseHive();
-
 
             var hits = usrClass1.FindInKeyName("food").ToList();
 
@@ -271,7 +264,6 @@ namespace Registry.Test
             usrClass1.FlushRecordListsAfterParse = false;
             usrClass1.ParseHive();
 
-
             var hits = usrClass1.FindInKeyName("Microsoft.Bing[FHW]", true).ToList();
 
             Check.That(hits.Count).IsEqualTo(44);
@@ -315,9 +307,7 @@ namespace Registry.Test
         public void ShouldFindAKeyWithClassName()
         {
             var systemOnDemand = new RegistryHiveOnDemand(@"..\..\..\Hives\SYSTEM");
-            var key =
-                systemOnDemand.GetKey(
-                    @"CsiTool-CreateHive-{00000000-0000-0000-0000-000000000000}\ControlSet001\Control\Lsa\Data");
+            var key = systemOnDemand.GetKey(@"CsiTool-CreateHive-{00000000-0000-0000-0000-000000000000}\ControlSet001\Control\Lsa\Data");
 
             Check.That(key.ClassName).IsNotEmpty();
         }
@@ -382,9 +372,7 @@ namespace Registry.Test
         {
             var usrClassFtp = new RegistryHiveOnDemand(@"..\..\..\Hives\UsrClass FTP.dat");
 
-            var key =
-                usrClassFtp.GetKey(
-                    @"S-1-5-21-2417227394-2575385136-2411922467-1105_CLAsses\ActivAtableClasses\CLsID");
+            var key = usrClassFtp.GetKey(@"S-1-5-21-2417227394-2575385136-2411922467-1105_CLAsses\ActivAtableClasses\CLsID");
 
             Check.That(key).IsNotNull();
         }
@@ -406,7 +394,6 @@ namespace Registry.Test
             usrClass1.RecoverDeleted = true;
             usrClass1.FlushRecordListsAfterParse = false;
             usrClass1.ParseHive();
-
 
             var hits = usrClass1.FindInKeyName("Zimmerman").ToList();
 
@@ -463,9 +450,7 @@ namespace Registry.Test
             usrclassDeleted.ParseHive();
 
             //S-1-5-21-146151751-63468248-1215037915-1000_Classes\Local Settings\MuiCache\6\52C64B7E
-            var key =
-                usrclassDeleted.GetKey(
-                    @"S-1-5-21-146151751-63468248-1215037915-1000_Classes\Local Settings\MuiCache\6\52C64B7E");
+            var key = usrclassDeleted.GetKey(@"S-1-5-21-146151751-63468248-1215037915-1000_Classes\Local Settings\MuiCache\6\52C64B7E");
 
             var val = key.Values.Single(t => t.ValueName == "LanguageList");
 
@@ -503,8 +488,7 @@ namespace Registry.Test
             var sam = new RegistryHive(@"..\..\..\Hives\SAM");
             sam.FlushRecordListsAfterParse = false;
             sam.ParseHive();
-            var key =
-                sam.GetKey(0x418);
+            var key = sam.GetKey(0x418);
 
             Check.That(key).IsNotNull();
         }
@@ -516,8 +500,7 @@ namespace Registry.Test
             sam.FlushRecordListsAfterParse = false;
             sam.ParseHive();
 
-            var key =
-                sam.GetKey(@"SAM\Domains\DoesNotExist");
+            var key = sam.GetKey(@"SAM\Domains\DoesNotExist");
 
             Check.That(key).IsNull();
         }
@@ -529,8 +512,7 @@ namespace Registry.Test
             sam.FlushRecordListsAfterParse = false;
             sam.ParseHive();
 
-            var key =
-                sam.GetKey(0x999418);
+            var key = sam.GetKey(0x999418);
 
             Check.That(key).IsNull();
         }
@@ -549,37 +531,35 @@ namespace Registry.Test
             Check.That(r.HiveType).IsEqualTo(HiveTypeEnum.Sam);
         }
 
-//        [Test]
-//        public void ShouldThrowExceptionNoRootKey()
-//        {
-//            Check.ThatCode(() =>
-//            {
-//                var r = new RegistryHive(@"..\..\..\Hives\SECURITYNoRoot");
-//                r.ParseHive();
-//            }).Throws<KeyNotFoundException>();
-//        }
+        //        [Test]
+        //        public void ShouldThrowExceptionNoRootKey()
+        //        {
+        //            Check.ThatCode(() =>
+        //            {
+        //                var r = new RegistryHive(@"..\..\..\Hives\SECURITYNoRoot");
+        //                r.ParseHive();
+        //            }).Throws<KeyNotFoundException>();
+        //        }
 
         [Test]
         public void ShouldThrowExceptionWhenCallingParseHiveTwice()
         {
             Check.ThatCode(() =>
-                {
-                    var r = new RegistryHive(@"..\..\..\Hives\SAMBadHBinHeader");
-                    r.ParseHive();
-                    r.ParseHive();
-                })
-                .Throws<Exception>();
+            {
+                var r = new RegistryHive(@"..\..\..\Hives\SAMBadHBinHeader");
+                r.ParseHive();
+                r.ParseHive();
+            }).Throws<Exception>();
         }
 
         [Test]
         public void ShouldThrowExceptionWithBadHbinHeader()
         {
             Check.ThatCode(() =>
-                {
-                    var r = new RegistryHive(@"..\..\..\Hives\SAMBadHBinHeader");
-                    r.ParseHive();
-                })
-                .Throws<Exception>();
+            {
+                var r = new RegistryHive(@"..\..\..\Hives\SAMBadHBinHeader");
+                r.ParseHive();
+            }).Throws<Exception>();
         }
 
         [Test]
@@ -587,9 +567,7 @@ namespace Registry.Test
         {
             var usrClassFtp = new RegistryHiveOnDemand(@"..\..\..\Hives\UsrClass FTP.dat");
 
-            var key =
-                usrClassFtp.GetKey(
-                    @"S-1-5-21-2417227394-2575385136-2411922467-1105_Classes\ActivatableClasses\CLSID");
+            var key = usrClassFtp.GetKey(@"S-1-5-21-2417227394-2575385136-2411922467-1105_Classes\ActivatableClasses\CLSID");
 
             Check.That(key).IsNotNull();
         }
