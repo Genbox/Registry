@@ -659,6 +659,9 @@ namespace Registry
         {
             keyPath = keyPath.ToLowerInvariant();
 
+            //trim slashes to match the value in keyPathKeyMap
+            keyPath = keyPath.Trim('\\', '/');
+
             if (_keyPathKeyMap.ContainsKey(keyPath))
             {
                 return _keyPathKeyMap[keyPath];
