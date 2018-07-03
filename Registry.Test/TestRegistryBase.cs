@@ -33,8 +33,7 @@ namespace Registry.Test
         [Test]
         public void FileNameNotFoundShouldThrowFileNotFoundException()
         {
-            Check.ThatCode(() => { new RegistryBase(@"c:\this\file\does\not\exist.reg"); })
-                .Throws<FileNotFoundException>();
+            Check.ThatCode(() => { new RegistryBase(@"c:\this\file\does\not\exist.reg"); }).Throws<FileNotFoundException>();
         }
 
         [Test]
@@ -56,7 +55,6 @@ namespace Registry.Test
         {
             Check.ThatCode(() => { new RegistryBase(@"..\..\..\Hives\NotAHive"); }).Throws<Exception>();
         }
-
 
         [Test]
         public void NtuserHiveShouldHaveNtuserHiveType()
@@ -108,7 +106,7 @@ namespace Registry.Test
 
             binaryReader.BaseStream.Seek(0, SeekOrigin.Begin);
 
-            var fileBytes = binaryReader.ReadBytes((int) binaryReader.BaseStream.Length);
+            var fileBytes = binaryReader.ReadBytes((int)binaryReader.BaseStream.Length);
 
             binaryReader.Close();
             fileStream.Close();
@@ -128,16 +126,15 @@ namespace Registry.Test
 
             binaryReader.BaseStream.Seek(0, SeekOrigin.Begin);
 
-            var fileBytes = binaryReader.ReadBytes((int) binaryReader.BaseStream.Length);
+            var fileBytes = binaryReader.ReadBytes((int)binaryReader.BaseStream.Length);
 
             binaryReader.Close();
             fileStream.Close();
 
             Check.ThatCode(() =>
-                {
-                    var rb = new RegistryBase(fileBytes);
-                })
-                .Throws<ArgumentException>();
+            {
+                var rb = new RegistryBase(fileBytes);
+            }).Throws<ArgumentException>();
         }
 
         [Test]

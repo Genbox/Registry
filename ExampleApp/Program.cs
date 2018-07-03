@@ -58,7 +58,6 @@ namespace ExampleApp
             //     config.AddTarget("console", consoleWrapper);
             config.AddTarget("console", consoleTarget);
 
-
             if (logFilePath != null)
             {
                 if (Directory.Exists(logFilePath))
@@ -74,10 +73,10 @@ namespace ExampleApp
                     config.AddTarget("file", fileTarget);
 
                     fileTarget.FileName = $"{logFilePath}/{Guid.NewGuid()}_log.txt";
+
                     // "${basedir}/file.txt";
 
-                    fileTarget.Layout = @"${longdate} ${logger} " + callsite +
-                                        " ${level:uppercase=true} ${message} ${exception:format=ToString,StackTrace}";
+                    fileTarget.Layout = @"${longdate} ${logger} " + callsite + " ${level:uppercase=true} ${message} ${exception:format=ToString,StackTrace}";
 
                     //var rule2 = new LoggingRule("*", loglevel, fileWrapper);
                     var rule2 = new LoggingRule("*", loglevel, fileTarget);
@@ -85,8 +84,7 @@ namespace ExampleApp
                 }
             }
 
-            consoleTarget.Layout = @"${longdate} ${logger} " + callsite +
-                                   " ${level:uppercase=true} ${message} ${exception:format=ToString,StackTrace}";
+            consoleTarget.Layout = @"${longdate} ${logger} " + callsite + " ${level:uppercase=true} ${message} ${exception:format=ToString,StackTrace}";
 
             // Step 4. Define rules
             //   var rule1 = new LoggingRule("*", loglevel, consoleWrapper);
@@ -101,7 +99,7 @@ namespace ExampleApp
             var testFiles = new List<string>();
 
             var result = Parser.Default.ParseArguments<Options>(args);
-            
+
             if (!result.Errors.Any())
             {
                 if (result.Value.HiveName == null && result.Value.DirectoryName == null)
@@ -220,67 +218,53 @@ namespace ExampleApp
                     var freeLists = registryHive.ListRecords.Where(t => t.Value.IsFree);
                     var referencedList = registryHive.ListRecords.Where(t => t.Value.IsReferenced);
 
-                    var goofyCellsShouldBeUsed =
-                        registryHive.CellRecords.Where(t => t.Value.IsFree == false && t.Value.IsReferenced == false);
+                    var goofyCellsShouldBeUsed = registryHive.CellRecords.Where(t => t.Value.IsFree == false && t.Value.IsReferenced == false);
 
-                    var goofyListsShouldBeUsed =
-                        registryHive.ListRecords.Where(t => t.Value.IsFree == false && t.Value.IsReferenced == false);
+                    var goofyListsShouldBeUsed = registryHive.ListRecords.Where(t => t.Value.IsFree == false && t.Value.IsReferenced == false);
 
                     var sb = new StringBuilder();
 
                     sb.AppendLine("Results:");
                     sb.AppendLine();
 
-                    sb.AppendLine(
-                        $"Found {registryHive.HBinRecordCount:N0} hbin records. Total size of seen hbin records: 0x{registryHive.HBinRecordTotalSize:X}, Header hive size: 0x{registryHive.Header.Length:X}");
+                    sb.AppendLine($"Found {registryHive.HBinRecordCount:N0} hbin records. Total size of seen hbin records: 0x{registryHive.HBinRecordTotalSize:X}, Header hive size: 0x{registryHive.Header.Length:X}");
 
                     if (registryHive.FlushRecordListsAfterParse == false)
                     {
-                        sb.AppendLine(
-                            $"Found {registryHive.CellRecords.Count:N0} Cell records (nk: {registryHive.CellRecords.Count(w => w.Value is NkCellRecord):N0}, vk: {registryHive.CellRecords.Count(w => w.Value is VkCellRecord):N0}, sk: {registryHive.CellRecords.Count(w => w.Value is SkCellRecord):N0}, lk: {registryHive.CellRecords.Count(w => w.Value is LkCellRecord):N0})");
+                        sb.AppendLine($"Found {registryHive.CellRecords.Count:N0} Cell records (nk: {registryHive.CellRecords.Count(w => w.Value is NkCellRecord):N0}, vk: {registryHive.CellRecords.Count(w => w.Value is VkCellRecord):N0}, sk: {registryHive.CellRecords.Count(w => w.Value is SkCellRecord):N0}, lk: {registryHive.CellRecords.Count(w => w.Value is LkCellRecord):N0})");
                         sb.AppendLine($"Found {registryHive.ListRecords.Count:N0} List records");
                         sb.AppendLine();
-                        sb.AppendLine(
-                            string.Format($"Header CheckSums match: {registryHive.Header.ValidateCheckSum()}"));
-                        sb.AppendLine(
-                            string.Format(
-                                $"Header sequence 1: {registryHive.Header.PrimarySequenceNumber}, Header sequence 2: {registryHive.Header.SecondarySequenceNumber}"));
+                        sb.AppendLine(string.Format($"Header CheckSums match: {registryHive.Header.ValidateCheckSum()}"));
+                        sb.AppendLine(string.Format($"Header sequence 1: {registryHive.Header.PrimarySequenceNumber}, Header sequence 2: {registryHive.Header.SecondarySequenceNumber}"));
 
                         sb.AppendLine();
 
-                        sb.AppendLine(
-                            $"There are {referencedCells.Count():N0} cell records marked as being referenced ({referencedCells.Count() / (double) registryHive.CellRecords.Count:P})");
-                        sb.AppendLine(
-                            $"There are {referencedList.Count():N0} list records marked as being referenced ({referencedList.Count() / (double) registryHive.ListRecords.Count:P})");
+                        sb.AppendLine($"There are {referencedCells.Count():N0} cell records marked as being referenced ({referencedCells.Count() / (double)registryHive.CellRecords.Count:P})");
+                        sb.AppendLine($"There are {referencedList.Count():N0} list records marked as being referenced ({referencedList.Count() / (double)registryHive.ListRecords.Count:P})");
 
                         if (result.Value.RecoverDeleted)
                         {
                             sb.AppendLine();
                             sb.AppendLine("Free record info");
-                            sb.AppendLine(
-                                $"{freeCells.Count():N0} free Cell records (nk: {nkFree:N0}, vk: {vkFree:N0}, sk: {skFree:N0}, lk: {lkFree:N0})");
+                            sb.AppendLine($"{freeCells.Count():N0} free Cell records (nk: {nkFree:N0}, vk: {vkFree:N0}, sk: {skFree:N0}, lk: {lkFree:N0})");
                             sb.AppendLine($"{freeLists.Count():N0} free List records");
                         }
 
                         sb.AppendLine();
-                        sb.AppendLine(
-                            $"Cells: Free + referenced + marked as in use but not referenced == Total? {registryHive.CellRecords.Count == freeCells.Count() + referencedCells.Count() + goofyCellsShouldBeUsed.Count()}");
-                        sb.AppendLine(
-                            $"Lists: Free + referenced + marked as in use but not referenced == Total? {registryHive.ListRecords.Count == freeLists.Count() + referencedList.Count() + goofyListsShouldBeUsed.Count()}");
+                        sb.AppendLine($"Cells: Free + referenced + marked as in use but not referenced == Total? {registryHive.CellRecords.Count == freeCells.Count() + referencedCells.Count() + goofyCellsShouldBeUsed.Count()}");
+                        sb.AppendLine($"Lists: Free + referenced + marked as in use but not referenced == Total? {registryHive.ListRecords.Count == freeLists.Count() + referencedList.Count() + goofyListsShouldBeUsed.Count()}");
                     }
 
                     sb.AppendLine();
-                    sb.AppendLine(
-                        $"There were {registryHive.HardParsingErrors:N0} hard parsing errors (a record marked 'in use' that didn't parse correctly.)");
-                    sb.AppendLine(
-                        $"There were {registryHive.SoftParsingErrors:N0} soft parsing errors (a record marked 'free' that didn't parse correctly.)");
+                    sb.AppendLine($"There were {registryHive.HardParsingErrors:N0} hard parsing errors (a record marked 'in use' that didn't parse correctly.)");
+                    sb.AppendLine($"There were {registryHive.SoftParsingErrors:N0} soft parsing errors (a record marked 'free' that didn't parse correctly.)");
 
                     logger.Info(sb.ToString());
 
-//                    foreach (var cellTemplate in fName1Test.ListRecords)
-//                    {
-//                        Console.WriteLine(cellTemplate.ToString());
-//                    }
+                    //                    foreach (var cellTemplate in fName1Test.ListRecords)
+                    //                    {
+                    //                        Console.WriteLine(cellTemplate.ToString());
+                    //                    }
 
                     if (result.Value.ExportHiveData)
                     {

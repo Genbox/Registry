@@ -44,8 +44,7 @@ namespace Registry.Test
             sam.FlushRecordListsAfterParse = false;
             sam.ParseHive();
 
-            var key =
-                sam.GetKey(0x418);
+            var key = sam.GetKey(0x418);
 
             Check.That(key).IsNotNull();
 
