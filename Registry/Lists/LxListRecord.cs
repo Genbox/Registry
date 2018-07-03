@@ -131,6 +131,7 @@ namespace Registry.Lists
                 sb.AppendLine($"Raw Bytes: {BitConverter.ToString(RawBytes)}");
                 sb.AppendLine();
             }
+
             //ncrunch: no coverage end
 
             return sb.ToString();

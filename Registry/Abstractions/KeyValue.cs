@@ -38,7 +38,7 @@ namespace Registry.Abstractions
             {
                 if (VkRecord.ValueData is byte[])
                 {
-                    return BitConverter.ToString((byte[]) VkRecord.ValueData);
+                    return BitConverter.ToString((byte[])VkRecord.ValueData);
                 }
 
                 return VkRecord.ValueData.ToString();
@@ -77,15 +77,15 @@ namespace Registry.Abstractions
         {
             var sb = new StringBuilder();
 
-//            sb.AppendLine($"Value Name: {ValueName}");
-//            sb.AppendLine($"Value Type: {ValueType}");
-//            sb.AppendLine($"Value Data: {ValueData}");
-//            sb.AppendLine($"Value Slack: {ValueSlack}");
-//
-//            sb.AppendLine();
+            //            sb.AppendLine($"Value Name: {ValueName}");
+            //            sb.AppendLine($"Value Type: {ValueType}");
+            //            sb.AppendLine($"Value Data: {ValueData}");
+            //            sb.AppendLine($"Value Slack: {ValueSlack}");
+            //
+            //            sb.AppendLine();
 
-//            sb.AppendLine(string.Format("Internal GUID: {0}", InternalGUID));
-//            sb.AppendLine();
+            //            sb.AppendLine(string.Format("Internal GUID: {0}", InternalGUID));
+            //            sb.AppendLine();
 
             sb.AppendLine($"VK Record: {VkRecord}");
 

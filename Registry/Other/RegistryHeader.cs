@@ -50,10 +50,7 @@ namespace Registry.Other
 
             Cluster = BitConverter.ToUInt32(rawBytes, 0x2c);
 
-            FileName = Encoding.Unicode.GetString(rawBytes, 0x30, 64)
-                .Replace("\0", string.Empty)
-                .Replace("\\??\\", string.Empty);
-
+            FileName = Encoding.Unicode.GetString(rawBytes, 0x30, 64).Replace("\0", string.Empty).Replace("\\??\\", string.Empty);
 
             //in windows 10, some extra things are added in reserved area, starting at offset 0x70
 
@@ -67,7 +64,7 @@ namespace Registry.Other
 
             LogFilenameGuid = new Guid(gbuff);
 
-            KtmFlags = (KtmFlag) BitConverter.ToInt32(rawBytes, 0x90);
+            KtmFlags = (KtmFlag)BitConverter.ToInt32(rawBytes, 0x90);
 
             gbuff = new byte[16];
             Buffer.BlockCopy(rawBytes, 0x94, gbuff, 0, 16);

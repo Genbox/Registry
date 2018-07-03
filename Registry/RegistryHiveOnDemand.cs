@@ -12,13 +12,9 @@ namespace Registry
 {
     public class RegistryHiveOnDemand : RegistryBase
     {
-        public RegistryHiveOnDemand(string hivePath) : base(hivePath)
-        {
-        }
+        public RegistryHiveOnDemand(string hivePath) : base(hivePath) { }
 
-        public RegistryHiveOnDemand(byte[] rawBytes) : base(rawBytes)
-        {
-        }
+        public RegistryHiveOnDemand(byte[] rawBytes) : base(rawBytes) { }
 
         private List<RegistryKey> GetSubkeys(uint subkeyListsStableCellIndex, RegistryKey parent)
         {
@@ -43,8 +39,7 @@ namespace Registry
                         var rawCell = GetRawRecord(offset.Key);
                         var nk = new NkCellRecord(rawCell.Length, offset.Key, this);
 
-                        Logger.Debug("In lf or lh, found nk record at relative offset 0x{0:X}. Name: {1}", offset,
-                            nk.Name);
+                        Logger.Debug("In lf or lh, found nk record at relative offset 0x{0:X}. Name: {1}", offset, nk.Name);
 
                         var tempKey = new RegistryKey(nk, parent);
 
@@ -128,8 +123,7 @@ namespace Registry
 
             if (valueListCellIndex > 0)
             {
-                Logger.Trace("Getting value list offset at relative offset 0x{0:X}. Value count is {1:N0}",
-                    valueListCellIndex, valueListCount);
+                Logger.Trace("Getting value list offset at relative offset 0x{0:X}. Value count is {1:N0}", valueListCellIndex, valueListCount);
 
                 var offsetList = GetDataNodeFromOffset(valueListCellIndex);
 
@@ -145,8 +139,8 @@ namespace Registry
             if (offsets.Count != valueListCount)
             {
                 //ncrunch: no coverage
-                Logger.Warn(
-                    "Value count mismatch! ValueListCount is {0:N0} but NKRecord.ValueOffsets.Count is {1:N0}",
+                Logger.Warn("Value count mismatch! ValueListCount is {0:N0} but NKRecord.ValueOffsets.Count is {1:N0}",
+
                     //ncrunch: no coverage
                     valueListCount, offsets.Count);
             } //ncrunch: no coverage
@@ -188,7 +182,7 @@ namespace Registry
         {
             var dataLenBytes = ReadBytesFromHive(relativeOffset + 4096, 4);
             var dataLen = BitConverter.ToUInt32(dataLenBytes, 0);
-            var size = (int) dataLen;
+            var size = (int)dataLen;
             size = Math.Abs(size);
 
             var dn = new DataNode(ReadBytesFromHive(relativeOffset + 4096, size), relativeOffset);
@@ -225,7 +219,7 @@ namespace Registry
 
             var rootKey = new RegistryKey(rootNk, null);
 
-            var keyNames = newPath.Split(new[] {'\\'}, StringSplitOptions.RemoveEmptyEntries);
+            var keyNames = newPath.Split(new[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
 
             rootKey.SubKeys.AddRange(GetSubkeys(rootKey.NkRecord.SubkeyListsStableCellIndex, rootKey));
 
@@ -233,9 +227,7 @@ namespace Registry
 
             for (var i = 0; i < keyNames.Length; i++)
             {
-                finalKey =
-                    finalKey.SubKeys.SingleOrDefault(
-                        r => r.KeyName.ToLowerInvariant() == keyNames[i].ToLowerInvariant());
+                finalKey = finalKey.SubKeys.SingleOrDefault(r => r.KeyName.ToLowerInvariant() == keyNames[i].ToLowerInvariant());
 
                 if (finalKey == null)
                 {
@@ -248,13 +240,11 @@ namespace Registry
                 }
             }
 
-            finalKey.Values.AddRange(GetKeyValues(finalKey.NkRecord.ValueListCellIndex,
-                finalKey.NkRecord.ValueListCount));
+            finalKey.Values.AddRange(GetKeyValues(finalKey.NkRecord.ValueListCellIndex, finalKey.NkRecord.ValueListCount));
 
             if (finalKey.NkRecord.ClassCellIndex > 0)
             {
-                Logger.Trace("Getting Class cell information at relative offset 0x{0:X}",
-                    finalKey.NkRecord.ClassCellIndex);
+                Logger.Trace("Getting Class cell information at relative offset 0x{0:X}", finalKey.NkRecord.ClassCellIndex);
                 var d = GetDataNodeFromOffset(finalKey.NkRecord.ClassCellIndex);
                 d.IsReferenced = true;
                 var clsName = Encoding.Unicode.GetString(d.Data, 0, finalKey.NkRecord.ClassLength);

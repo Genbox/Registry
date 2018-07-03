@@ -49,7 +49,7 @@ namespace Registry
 
             binaryReader.BaseStream.Seek(0, SeekOrigin.Begin);
 
-            FileBytes = binaryReader.ReadBytes((int) binaryReader.BaseStream.Length);
+            FileBytes = binaryReader.ReadBytes((int)binaryReader.BaseStream.Length);
 
             binaryReader.Close();
             fileStream.Close();
@@ -96,10 +96,10 @@ namespace Registry
 
             if (readLength > remaining)
             {
-                readLength = (int) remaining;
+                readLength = (int)remaining;
             }
 
-            var r = new ArraySegment<byte>(FileBytes, (int) offset, readLength);
+            var r = new ArraySegment<byte>(FileBytes, (int)offset, readLength);
 
             return r.ToArray();
         }
@@ -234,8 +234,7 @@ namespace Registry
                 x += 1;
             }
 
-            return
-                $"Log path: {LogPath} Valid checksum: {Header.ValidateCheckSum()} primary: 0x{Header.PrimarySequenceNumber:X} secondary: 0x{Header.SecondarySequenceNumber:X} Entries count: {TransactionLogEntries.Count:N0} Entry info: {sb}";
+            return $"Log path: {LogPath} Valid checksum: {Header.ValidateCheckSum()} primary: 0x{Header.PrimarySequenceNumber:X} secondary: 0x{Header.SecondarySequenceNumber:X} Entries count: {TransactionLogEntries.Count:N0} Entry info: {sb}";
         }
     }
 }

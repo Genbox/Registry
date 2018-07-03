@@ -32,7 +32,7 @@ namespace Registry.Cells
 
             if (paddingLength > 0)
             {
-                var padding = rawBytes.Skip((int) paddingOffset).Take((int) paddingLength).ToArray();
+                var padding = rawBytes.Skip((int)paddingOffset).Take((int)paddingLength).ToArray();
 
                 Check.That(Array.TrueForAll(padding, a => a == 0));
             }
@@ -69,7 +69,7 @@ namespace Registry.Cells
         {
             get
             {
-                var rawDescriptor = RawBytes.Skip(0x18).Take((int) DescriptorLength).ToArray();
+                var rawDescriptor = RawBytes.Skip(0x18).Take((int)DescriptorLength).ToArray();
 
                 if (rawDescriptor.Length > 0)
                 {

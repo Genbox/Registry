@@ -110,7 +110,6 @@ namespace Registry.Lists
             sb.AppendLine("------------ End of offsets ------------");
             sb.AppendLine();
 
-
             return sb.ToString();
         }
     }

@@ -164,7 +164,6 @@ namespace Registry
 
             _hbin = _hbin.Concat(GetEmptyHbin(0x1000)).ToArray();
 
-
             var treeKey = BuildKeyTree();
 
             var parentOffset = ProcessSkeletonTree(treeKey); //always include keys/values for now
@@ -221,7 +220,7 @@ namespace Registry
                 _currentOffsetInHbin = _hbin.Length;
 
                 //we have to make our hbin at least as big as the data that needs to go in it, so figure that out
-                var hbinBaseSize = (int) Math.Ceiling(recordSize / (double) 4096);
+                var hbinBaseSize = (int)Math.Ceiling(recordSize / (double)4096);
                 var hbinSize = hbinBaseSize * 0x1000;
 
                 //add more space
@@ -268,7 +267,7 @@ namespace Registry
 
             var dataLenBytes = _hive.ReadBytesFromHive(classcellId + 4096, 4);
             var dataLen = BitConverter.ToUInt32(dataLenBytes, 0);
-            var size = (int) dataLen;
+            var size = (int)dataLen;
             size = Math.Abs(size);
 
             var dn = new DataNode(_hive.ReadBytesFromHive(classcellId + 4096, size), classcellId);
@@ -330,6 +329,7 @@ namespace Registry
                     {
                         var rawChunk = chunk.Concat(new byte[4]).ToArray(); //add our extra 4 bytes at the end
                         var toWrite = BitConverter.GetBytes(-1 * (rawChunk.Length + 4)).Concat(rawChunk).ToArray();
+
                         //add the size
 
                         CheckhbinSize(toWrite.Length);
@@ -340,7 +340,6 @@ namespace Registry
                         _currentOffsetInHbin += toWrite.Length;
                     }
 
-
                     //next is the list itself of offsets to the data chunks
 
                     var offsetSize = 4 + dbOffsets.Count * 4; //size itself plus a slot for each offset
@@ -350,8 +349,7 @@ namespace Registry
                         offsetSize += 4;
                     }
 
-                    var offsetList =
-                        BitConverter.GetBytes(-1 * offsetSize).Concat(new byte[dbOffsets.Count * 4]).ToArray();
+                    var offsetList = BitConverter.GetBytes(-1 * offsetSize).Concat(new byte[dbOffsets.Count * 4]).ToArray();
 
                     var i = 1;
                     foreach (var dbo in dbOffsets)
@@ -368,19 +366,11 @@ namespace Registry
                     offsetList.CopyTo(_hbin, offsetOffset);
                     _currentOffsetInHbin += offsetList.Length;
 
-
                     //all the data is written, build a dblist to reference it
                     //db list is just an offset to offsets
                     //size db #entries offset
 
-                    var dbRaw =
-                        BitConverter.GetBytes(-16)
-                            .Concat(Encoding.ASCII.GetBytes("db"))
-                            .Concat(
-                                BitConverter.GetBytes((short) dbOffsets.Count)
-                                    .Concat(BitConverter.GetBytes(offsetOffset)))
-                            .Concat(new byte[4])
-                            .ToArray();
+                    var dbRaw = BitConverter.GetBytes(-16).Concat(Encoding.ASCII.GetBytes("db")).Concat(BitConverter.GetBytes((short)dbOffsets.Count).Concat(BitConverter.GetBytes(offsetOffset))).Concat(new byte[4]).ToArray();
 
                     var dbOffset = _currentOffsetInHbin;
                     CheckhbinSize(dbRaw.Length);
@@ -421,8 +411,7 @@ namespace Registry
 
             _currentOffsetInHbin += vkBytes.Length;
 
-            return vkOffset
-                ;
+            return vkOffset;
         }
 
         private int ProcessKey(RegistryKey key, int parentCellIndex, bool addValues, bool addSubkeys)
@@ -445,10 +434,8 @@ namespace Registry
 
             //processValues
 
-            BitConverter.GetBytes(0)
-                .CopyTo(nkBytes, ValueCountIndex); // zero out value count unless its required for this key
-            BitConverter.GetBytes(0)
-                .CopyTo(nkBytes, ValueListCellIndex); // zero out value list unless its required for this key
+            BitConverter.GetBytes(0).CopyTo(nkBytes, ValueCountIndex); // zero out value count unless its required for this key
+            BitConverter.GetBytes(0).CopyTo(nkBytes, ValueListCellIndex); // zero out value list unless its required for this key
             if (addValues)
             {
                 var valueOffsets = new List<int>();
@@ -473,10 +460,8 @@ namespace Registry
 
             //processSubkeys
 
-            BitConverter.GetBytes(0)
-                .CopyTo(nkBytes, SubkeyCountStableOffset); // zero out subkey count unless its required for this key
-            BitConverter.GetBytes(0)
-                .CopyTo(nkBytes, SubkeyListsStableCellIndex); // zero out subkey list unless its required for this key
+            BitConverter.GetBytes(0).CopyTo(nkBytes, SubkeyCountStableOffset); // zero out subkey count unless its required for this key
+            BitConverter.GetBytes(0).CopyTo(nkBytes, SubkeyListsStableCellIndex); // zero out subkey list unless its required for this key
             if (addSubkeys)
             {
                 var subkeyOffsets = new Dictionary<int, string>();
@@ -525,7 +510,6 @@ namespace Registry
 
             BitConverter.GetBytes(skOffset).CopyTo(nkBytes, SecurityOffset);
             BitConverter.GetBytes(classOffset).CopyTo(nkBytes, ClassOffset);
-
 
             //commit our nk record to hbin
             CheckhbinSize(nkBytes.Length);
@@ -578,7 +562,6 @@ namespace Registry
             return parentOffset;
         }
 
-
         private LxListRecord BuildlfList(Dictionary<int, string> subkeyInfo)
         {
             var totalSize = 4 + 2 + 2 + subkeyInfo.Count * 8; //size + sig + num entries + bytes for list itself
@@ -587,7 +570,7 @@ namespace Registry
 
             BitConverter.GetBytes(-1 * totalSize).CopyTo(listBytes, 0);
             Encoding.ASCII.GetBytes("lf").CopyTo(listBytes, 4);
-            BitConverter.GetBytes((short) subkeyInfo.Count).CopyTo(listBytes, 6);
+            BitConverter.GetBytes((short)subkeyInfo.Count).CopyTo(listBytes, 6);
 
             var index = 0x8;
 

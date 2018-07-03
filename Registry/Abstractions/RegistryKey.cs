@@ -77,7 +77,6 @@ namespace Registry.Abstractions
 
                 return $@"{Parent.KeyPath}\{KeyName}";
             }
-
             set => _keyPath = value;
         }
 
@@ -139,13 +138,12 @@ namespace Registry.Abstractions
             var keyNames = KeyPath.Split('\\');
             var normalizedKeyPath = string.Join("\\", keyNames.Skip(1));
 
-            var keyName = normalizedKeyPath.Length > 0
-                ? $"[{keyBase}\\{normalizedKeyPath}]"
-                : $"[{keyBase}]";
+            var keyName = normalizedKeyPath.Length > 0 ? $"[{keyBase}\\{normalizedKeyPath}]" : $"[{keyBase}]";
 
             sb.AppendLine();
             sb.AppendLine(keyName);
             sb.AppendLine($";Last write timestamp {LastWriteTime.Value.UtcDateTime.ToString("o")}");
+
             //sb.AppendLine($";Last write timestamp {LastWriteTime.Value.UtcDateTime.ToString("o")}");
 
             foreach (var keyValue in Values)
@@ -178,28 +176,21 @@ namespace Registry.Abstractions
                     case VkCellRecord.DataTypeEnum.RegLink:
                     case VkCellRecord.DataTypeEnum.RegResourceRequirementsList:
                     case VkCellRecord.DataTypeEnum.RegExpandSz:
-                        var prefix = $"hex({(int) keyValue.VkRecord.DataType:x}):";
-                        keyValueOut =
-                            $"{prefix}{BitConverter.ToString(keyValue.ValueDataRaw).Replace("-", ",")}".ToLowerInvariant
-                                ();
+                        var prefix = $"hex({(int)keyValue.VkRecord.DataType:x}):";
+                        keyValueOut = $"{prefix}{BitConverter.ToString(keyValue.ValueDataRaw).Replace("-", ",")}".ToLowerInvariant();
                         if (keyValueOut.Length + prefix.Length + keyNameOut.Length > 76)
                         {
-                            keyValueOut =
-                                $"{prefix}{FormatBinaryValueData(keyValue.ValueDataRaw, keyNameOut.Length, prefix.Length)}";
+                            keyValueOut = $"{prefix}{FormatBinaryValueData(keyValue.ValueDataRaw, keyNameOut.Length, prefix.Length)}";
                         }
 
                         break;
 
                     case VkCellRecord.DataTypeEnum.RegDword:
-                        keyValueOut =
-                            $"dword:{BitConverter.ToInt32(keyValue.ValueDataRaw, 0):X8}"
-                                .ToLowerInvariant();
+                        keyValueOut = $"dword:{BitConverter.ToInt32(keyValue.ValueDataRaw, 0):X8}".ToLowerInvariant();
                         break;
 
                     case VkCellRecord.DataTypeEnum.RegBinary:
-                        keyValueOut =
-                            $"hex:{BitConverter.ToString(keyValue.ValueDataRaw).Replace("-", ",")}"
-                                .ToLowerInvariant();
+                        keyValueOut = $"hex:{BitConverter.ToString(keyValue.ValueDataRaw).Replace("-", ",")}".ToLowerInvariant();
                         if (keyValueOut.Length + 5 + keyNameOut.Length > 76)
                         {
                             keyValueOut = $"hex:{FormatBinaryValueData(keyValue.ValueDataRaw, keyNameOut.Length, 5)}";
@@ -270,8 +261,8 @@ namespace Registry.Abstractions
 
             sb.AppendLine();
 
-//            sb.AppendLine(string.Format("Internal GUID: {0}", InternalGUID));
-//            sb.AppendLine();
+            //            sb.AppendLine(string.Format("Internal GUID: {0}", InternalGUID));
+            //            sb.AppendLine();
 
             sb.AppendLine($"NK Record: {NkRecord}");
 
@@ -300,7 +291,6 @@ namespace Registry.Abstractions
             }
 
             //   sb.AppendLine();
-
 
             return sb.ToString();
         }

@@ -104,8 +104,7 @@ namespace Registry
                 x += 1;
             }
 
-            return
-                $"Size: 0x{Size:X4}, Sequence Number: 0x{SequenceNumber:X4}, Dirty Page Count: {DirtyPageCount:N0}, Hash1: 0x{Hash1:X}, Hash2: 0x{Hash2:X} "; //Page info: {sb}
+            return $"Size: 0x{Size:X4}, Sequence Number: 0x{SequenceNumber:X4}, Dirty Page Count: {DirtyPageCount:N0}, Hash1: 0x{Hash1:X}, Hash2: 0x{Hash2:X} "; //Page info: {sb}
         }
     }
 

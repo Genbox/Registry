@@ -112,9 +112,9 @@ namespace Registry.Cells
         public byte Debug => RawBytes[0x3b];
 
         //TODO Layer semantics?
-        public AccessFlag Access => (AccessFlag) BitConverter.ToInt32(RawBytes, 0x10);
+        public AccessFlag Access => (AccessFlag)BitConverter.ToInt32(RawBytes, 0x10);
 
-        public FlagEnum Flags => (FlagEnum) BitConverter.ToUInt16(RawBytes, 6);
+        public FlagEnum Flags => (FlagEnum)BitConverter.ToUInt16(RawBytes, 6);
 
         /// <summary>
         ///     The last write time of this key
@@ -200,7 +200,7 @@ namespace Registry.Cells
 
                 var paddingOffset = 0x50 + NameLength;
 
-                var paddingBlock = (int) Math.Ceiling((double) paddingOffset / 8);
+                var paddingBlock = (int)Math.Ceiling((double)paddingOffset / 8);
 
                 var actualPaddingOffset = paddingBlock * 8;
 
@@ -281,7 +281,7 @@ namespace Registry.Cells
             {
                 var rawFlags = Convert.ToString(RawBytes[0x3a], 2).PadLeft(8, '0');
 
-                return (UserFlag) Convert.ToInt32(rawFlags.Substring(0, 4));
+                return (UserFlag)Convert.ToInt32(rawFlags.Substring(0, 4));
             }
         }
 
@@ -314,7 +314,7 @@ namespace Registry.Cells
             {
                 var rawFlags = Convert.ToString(RawBytes[0x3a], 2).PadLeft(8, '0');
 
-                return (VirtualizationControlFlag) Convert.ToInt32(rawFlags.Substring(4, 4));
+                return (VirtualizationControlFlag)Convert.ToInt32(rawFlags.Substring(4, 4));
             }
         }
 

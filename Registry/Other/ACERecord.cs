@@ -63,7 +63,7 @@ namespace Registry.Other
         }
 
         // public properties...
-        public AceFlagsEnum AceFlags => (AceFlagsEnum) RawBytes[1];
+        public AceFlagsEnum AceFlags => (AceFlagsEnum)RawBytes[1];
 
         public ushort AceSize => BitConverter.ToUInt16(RawBytes, 2);
 
@@ -75,6 +75,7 @@ namespace Registry.Other
                 {
                     case 0x0:
                         return AceTypeEnum.AccessAllowedAceType;
+
                     //ncrunch: no coverage start
                     case 0x1:
                         return AceTypeEnum.AccessDeniedAceType;
@@ -101,12 +102,13 @@ namespace Registry.Other
                         return AceTypeEnum.SystemAlarmObjectAceType;
                     default:
                         return AceTypeEnum.Unknown;
+
                     //ncrunch: no coverage end
                 }
             }
         }
 
-        public MasksEnum Mask => (MasksEnum) BitConverter.ToUInt32(RawBytes, 4);
+        public MasksEnum Mask => (MasksEnum)BitConverter.ToUInt32(RawBytes, 4);
 
         public byte[] RawBytes { get; }
 

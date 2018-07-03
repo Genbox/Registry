@@ -6,7 +6,6 @@ using Registry.Other;
 
 // namespaces...
 
-
 //ncrunch: no coverage start
 
 namespace Registry.Cells
@@ -38,6 +37,7 @@ namespace Registry.Cells
 
         // private fields...
         private readonly int _size;
+
         // protected internal constructors...
 
         // public fields...
@@ -137,6 +137,7 @@ namespace Registry.Cells
             {
                 Padding = new byte[paddingLength];
                 Array.Copy(rawBytes, paddingOffset, Padding, 0, paddingLength);
+
                 //Padding = BitConverter.ToString(rawBytes, paddingOffset, paddingLength);
             }
 
@@ -161,7 +162,7 @@ namespace Registry.Cells
 
         public byte Debug { get; }
 
-        public FlagEnum Flags => (FlagEnum) BitConverter.ToUInt16(RawBytes, 6);
+        public FlagEnum Flags => (FlagEnum)BitConverter.ToUInt16(RawBytes, 6);
 
         /// <summary>
         ///     The last write time of this key
@@ -227,11 +228,7 @@ namespace Registry.Cells
         public uint WorkVar { get; }
 
         // public properties...
-        public long AbsoluteOffset
-        {
-            get => RelativeOffset + 4096;
-            set { }
-        }
+        public long AbsoluteOffset { get => RelativeOffset + 4096; set { } }
 
         public bool IsFree => _size > 0;
 
@@ -239,11 +236,7 @@ namespace Registry.Cells
         public byte[] RawBytes { get; }
         public long RelativeOffset { get; }
 
-        public string Signature
-        {
-            get => Encoding.ASCII.GetString(RawBytes, 4, 2);
-            set { }
-        }
+        public string Signature { get => Encoding.ASCII.GetString(RawBytes, 4, 2); set { } }
 
         public int Size => Math.Abs(_size);
 
@@ -300,7 +293,6 @@ namespace Registry.Cells
             sb.AppendLine($"User Flags: 0x{UserFlags:X}");
             sb.AppendLine($"Virtual Control Flags: 0x{VirtualControlFlags:X}");
             sb.AppendLine($"Work Var: 0x{WorkVar:X}");
-
 
             sb.AppendLine();
             sb.AppendLine($"Padding: {BitConverter.ToString(Padding)}");
