@@ -551,7 +551,7 @@ namespace Registry.Cells
 
                 if (NameLength == 0)
                 {
-                    valName = "(default)";
+                    valName = string.Empty;
                 }
                 else
                 {
