@@ -144,8 +144,6 @@ namespace Registry
                 throw new Exception("Sequence numbers match! Hive is not dirty");
             }
 
-            var bytes = FileBytes;
-
             var logs = new List<TransactionLog>();
 
             foreach (var ofFileName in logFiles)
@@ -214,12 +212,12 @@ namespace Registry
                     Logger.Info($"Replaying log file: {firstLog.LogPath}");
 
                     //we can replay the log
-                    bytes = firstLog.UpdateHiveBytes(bytes);
+                    firstLog.UpdateHiveBytes(FileBytes);
                     wasUpdated = true;
                 }
                 else
                 {
-                    bytes = secondLog.UpdateHiveBytes(bytes);
+                    secondLog.UpdateHiveBytes(FileBytes);
                     wasUpdated = true;
                 }
 
@@ -228,7 +226,7 @@ namespace Registry
                 if (secondLog.Header.PrimarySequenceNumber == maximumSequenceNumber + 1 && secondLog.Header.PrimarySequenceNumber > Header.SecondarySequenceNumber)
                 {
                     Logger.Info($"Replaying log file: {secondLog.LogPath}");
-                    bytes = secondLog.UpdateHiveBytes(bytes);
+                    secondLog.UpdateHiveBytes(FileBytes);
                     maximumSequenceNumber = secondLog.TransactionLogEntries.Max(t => t.SequenceNumber);
                 }
             }
@@ -250,7 +248,7 @@ namespace Registry
                     Logger.Info($"Replaying log file: {soloLog.LogPath}");
 
                     //we can replay the log
-                    bytes = soloLog.UpdateHiveBytes(bytes);
+                    soloLog.UpdateHiveBytes(FileBytes);
                     maximumSequenceNumber = soloLog.TransactionLogEntries.Max(t => t.SequenceNumber);
                     wasUpdated = true;
                 }
@@ -261,19 +259,18 @@ namespace Registry
                 //update sequence numbers with latest available
                 var seqBytes = BitConverter.GetBytes(maximumSequenceNumber);
 
-                Buffer.BlockCopy(seqBytes, 0, bytes, 0x4, 0x4); //Primary #
-                Buffer.BlockCopy(seqBytes, 0, bytes, 0x8, 0x4); //Secondary #
+                Buffer.BlockCopy(seqBytes, 0, FileBytes, 0x4, 0x4); //Primary #
+                Buffer.BlockCopy(seqBytes, 0, FileBytes, 0x8, 0x4); //Secondary #
 
                 Logger.Info($"At least one transaction log was applied. Sequence numbers have been updated to 0x{maximumSequenceNumber:X4}");
             }
 
             if (updateExistingData)
             {
-                FileBytes = bytes;
                 Initialize(); //reprocess header
             }
 
-            return bytes;
+            return FileBytes;
         }
 
         //TODO this needs refactored to remove duplicated code

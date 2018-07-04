@@ -195,8 +195,8 @@ namespace Registry
         /// </summary>
         /// <param name="hiveBytes"></param>
         /// <remarks>This method does nothing to determine IF the data should be overwritten</remarks>
-        /// <returns>Byte array containing the updaated hive</returns>
-        public byte[] UpdateHiveBytes(byte[] hiveBytes)
+        /// <returns>Byte array containing the updated hive</returns>
+        public void UpdateHiveBytes(byte[] hiveBytes)
         {
             const int baseOffset = 0x1000; //hbins start at 4096 bytes
 
@@ -210,8 +210,6 @@ namespace Registry
                     Buffer.BlockCopy(dirtyPage.PageBytes, 0, hiveBytes, dirtyPage.Offset + baseOffset, dirtyPage.Size);
                 }
             }
-
-            return hiveBytes;
         }
 
         public bool HasValidSignature()
