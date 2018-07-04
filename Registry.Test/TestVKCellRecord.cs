@@ -28,15 +28,15 @@ namespace Registry.Test
 
             Check.That(val).IsNotNull();
 
-            Check.That(val.ValueName).IsNotEmpty();
+            Check.That(val.ValueName).IsEmpty();
             Check.That(val.ValueData).IsEmpty();
             Check.That(val.ValueSlack).IsEmpty();
             Check.That(val.ValueSlackRaw).IsEmpty();
             Check.That(val.ToString()).IsNotEmpty();
-            Check.That(val.ValueName).IsEqualTo("(default)");
+            Check.That(val.ValueName).IsEqualTo(string.Empty);
             Check.That(val.ValueType).IsEqualTo("RegNone");
-            Check.That(val.ValueData).IsEqualTo("");
-            Check.That(val.ValueSlack).IsEqualTo("");
+            Check.That(val.ValueData).IsEmpty();
+            Check.That(val.ValueSlack).IsEmpty();
             Check.That(val.VkRecord.Size).IsEqualTo(-24);
             Check.That(val.VkRecord.RelativeOffset).IsEqualTo(0x270);
             Check.That(val.VkRecord.AbsoluteOffset).IsEqualTo(0x1270);
@@ -93,7 +93,7 @@ namespace Registry.Test
 
             Check.That(key).IsNotNull();
 
-            var val = key.Values.Single(t => t.ValueName == "(default)");
+            var val = key.Values.Single(t => t.ValueName == string.Empty);
 
             Check.That(val).IsNotNull();
             Check.That(val.VkRecord.DataType).IsEqualTo(VkCellRecord.DataTypeEnum.RegDwordBigEndian);
@@ -256,7 +256,7 @@ namespace Registry.Test
 
             Check.That(key).IsNotNull();
 
-            val = key.Values.Single(t => t.ValueName == "(default)");
+            val = key.Values.Single(t => t.ValueName == string.Empty);
 
             Check.That(val).IsNotNull();
             Check.That(val.VkRecord.DataType).IsEqualTo(VkCellRecord.DataTypeEnum.RegExpandSz);
@@ -591,7 +591,7 @@ namespace Registry.Test
 
             Check.That(key).IsNotNull();
 
-            var val = key.Values.Single(e => e.ValueName == "(default)");
+            var val = key.Values.Single(e => e.ValueName == string.Empty);
 
             Check.That(val).IsNotNull();
 
@@ -602,7 +602,7 @@ namespace Registry.Test
             Check.That(val.VkRecord.IsFree).IsFalse();
             Check.That(val.VkRecord.NamePresentFlag).IsEqualTo(0x0);
             Check.That(val.VkRecord.NameLength).IsEqualTo(0x0);
-            Check.That(val.VkRecord.ValueName).IsEqualTo("(default)");
+            Check.That(val.VkRecord.ValueName).IsEmpty();
             Check.That(val.VkRecord.DataType).IsEqualTo(VkCellRecord.DataTypeEnum.RegQword);
             Check.That(val.VkRecord.DataTypeRaw).IsEqualTo(11);
             Check.That(val.VkRecord.DataLength).Equals(0x80000000);
@@ -687,7 +687,7 @@ namespace Registry.Test
 
             Check.That(key).IsNotNull();
 
-            var val = key.Values.Single(e => e.ValueName == "(default)");
+            var val = key.Values.Single(e => e.ValueName == string.Empty);
 
             Check.That(val).IsNotNull();
 
@@ -698,7 +698,7 @@ namespace Registry.Test
             Check.That(val.VkRecord.IsFree).IsFalse();
             Check.That(val.VkRecord.NamePresentFlag).IsEqualTo(0x00);
             Check.That(val.VkRecord.NameLength).IsEqualTo(0);
-            Check.That(val.VkRecord.ValueName).IsEqualTo("(default)");
+            Check.That(val.VkRecord.ValueName).IsEmpty();
             Check.That(val.VkRecord.DataType).IsEqualTo(VkCellRecord.DataTypeEnum.RegDword);
             Check.That(val.VkRecord.DataLength).Equals(0x80000004);
             Check.That(val.VkRecord.OffsetToData).Equals((uint)0x07);
@@ -749,7 +749,7 @@ namespace Registry.Test
 
             Check.That(key).IsNotNull();
 
-            var val = key.Values.Single(e => e.ValueName == "(default)");
+            var val = key.Values.Single(e => e.ValueName == string.Empty);
 
             Check.That(val).IsNotNull();
 
@@ -760,7 +760,7 @@ namespace Registry.Test
             Check.That(val.VkRecord.IsFree).IsFalse();
             Check.That(val.VkRecord.NamePresentFlag).IsEqualTo(0x00);
             Check.That(val.VkRecord.NameLength).IsEqualTo(0);
-            Check.That(val.VkRecord.ValueName).IsEqualTo("(default)");
+            Check.That(val.VkRecord.ValueName).IsEmpty();
             Check.That(val.VkRecord.DataType).IsEqualTo(VkCellRecord.DataTypeEnum.RegNone);
             Check.That(val.VkRecord.DataLength).Equals(0x80000000);
             Check.That(val.VkRecord.OffsetToData).Equals((uint)0x0);
@@ -810,7 +810,7 @@ namespace Registry.Test
 
             Check.That(key).IsNotNull();
 
-            var val = key.Values.Single(e => e.ValueName == "(default)");
+            var val = key.Values.Single(e => e.ValueName == string.Empty);
 
             Check.That(val).IsNotNull();
 
@@ -821,7 +821,7 @@ namespace Registry.Test
             Check.That(val.VkRecord.IsFree).IsFalse();
             Check.That(val.VkRecord.NamePresentFlag).IsEqualTo(0x00);
             Check.That(val.VkRecord.NameLength).IsEqualTo(0);
-            Check.That(val.VkRecord.ValueName).IsEqualTo("(default)");
+            Check.That(val.VkRecord.ValueName).IsEmpty();
             Check.That(val.VkRecord.DataType).IsEqualTo(VkCellRecord.DataTypeEnum.RegSz);
             Check.That(val.VkRecord.DataLength).Equals(0x80000004);
             Check.That(val.VkRecord.OffsetToData).Equals((uint)0x0221);
@@ -840,7 +840,7 @@ namespace Registry.Test
 
             Check.That(key).IsNotNull();
 
-            var val = key.Values.Single(e => e.ValueName == "(default)");
+            var val = key.Values.Single(e => e.ValueName == string.Empty);
 
             Check.That(val).IsNotNull();
 
@@ -851,7 +851,7 @@ namespace Registry.Test
             Check.That(val.VkRecord.IsFree).IsFalse();
             Check.That(val.VkRecord.NamePresentFlag).IsEqualTo(0x0);
             Check.That(val.VkRecord.NameLength).IsEqualTo(0);
-            Check.That(val.VkRecord.ValueName).IsEqualTo("(default)");
+            Check.That(val.VkRecord.ValueName).IsEmpty();
             Check.That(val.VkRecord.DataType).IsEqualTo(VkCellRecord.DataTypeEnum.RegUnknown);
             Check.That(val.VkRecord.DataTypeRaw).IsEqualTo(513);
             Check.That(val.VkRecord.DataLength).Equals(0x80000000);
@@ -871,7 +871,7 @@ namespace Registry.Test
 
             Check.That(key).IsNotNull();
 
-            var val = key.Values.Single(e => e.ValueName == "(default)");
+            var val = key.Values.Single(e => e.ValueName == string.Empty);
 
             Check.That(val).IsNotNull();
 
@@ -882,7 +882,7 @@ namespace Registry.Test
             Check.That(val.VkRecord.IsFree).IsFalse();
             Check.That(val.VkRecord.NamePresentFlag).IsEqualTo(0x0);
             Check.That(val.VkRecord.NameLength).IsEqualTo(0x0);
-            Check.That(val.VkRecord.ValueName).IsEqualTo("(default)");
+            Check.That(val.VkRecord.ValueName).IsEmpty();
             Check.That(val.VkRecord.ValueData).IsInstanceOf<byte[]>();
             Check.That(val.VkRecord.DataType).IsEqualTo(VkCellRecord.DataTypeEnum.RegUnknown);
             Check.That(val.VkRecord.DataTypeRaw).IsEqualTo(15);
