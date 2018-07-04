@@ -157,7 +157,7 @@ namespace Registry
             Logger.Debug($"Hive version is {version}");
         }
 
-        public bool ParseLog()
+        public void ParseLog()
         {
             if (_parsed)
             {
@@ -188,8 +188,6 @@ namespace Registry
             }
 
             _parsed = true;
-
-            return true;
         }
 
         /// <summary>
