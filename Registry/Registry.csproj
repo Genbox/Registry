@@ -1,12 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Parses offline registry hives</Description>
-    <Authors>Eric R. Zimmerman</Authors>
-    <Company>Eric R. Zimmerman</Company>
+    <Authors>Ian Qvist</Authors>
+    <Company>Ian Qvist</Company>
     <FileVersion>1.1.0.0</FileVersion>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <PackageId>Genbox.Registry</PackageId>
+    <Product>Genbox.Registry</Product>
+    <Version>1.1.0</Version>
+    <PackageProjectUrl>https://github.com/Genbox/Registry</PackageProjectUrl>
+    <RepositoryType>Git</RepositoryType>
+    <RepositoryUrl>https://github.com/Genbox/Registry</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/Genbox/Registry/blob/master/LICENSE.md</PackageLicenseUrl>
   </PropertyGroup>
 
   <ItemGroup>
