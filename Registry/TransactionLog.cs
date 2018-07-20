@@ -82,6 +82,7 @@ namespace Registry
         public RegistryHeader Header { get; set; }
         public HiveTypeEnum HiveType { get; private set; }
         public List<TransactionLogEntry> TransactionLogEntries { get; }
+        public int MaximumSequenceNumber { get; set; }
 
         private byte[] ReadBytesFromHive(long offset, int length)
         {
@@ -160,9 +161,9 @@ namespace Registry
         public void ParseLog()
         {
             if (_parsed)
-            {
-                throw new Exception("ParseLog already called");
-            }
+                return;
+
+            MaximumSequenceNumber = int.MinValue;
 
             var index = 0x200; //data starts at offset 500 decimal
 
@@ -183,6 +184,9 @@ namespace Registry
 
                 var tle = new TransactionLogEntry(buff);
                 TransactionLogEntries.Add(tle);
+
+                if (tle.SequenceNumber > MaximumSequenceNumber)
+                    MaximumSequenceNumber = tle.SequenceNumber;
 
                 index += size;
             }
@@ -230,7 +234,7 @@ namespace Registry
                 x += 1;
             }
 
-            return $"Log path: {LogPath} Valid checksum: {Header.ValidateCheckSum()} primary: 0x{Header.PrimarySequenceNumber:X} secondary: 0x{Header.SecondarySequenceNumber:X} Entries count: {TransactionLogEntries.Count:N0} Entry info: {sb}";
+            return $"Log path: {LogPath} Valid checksum: {Header.HasValidateCheckSum()} primary: 0x{Header.PrimarySequenceNumber:X} secondary: 0x{Header.SecondarySequenceNumber:X} Entries count: {TransactionLogEntries.Count:N0} Entry info: {sb}";
         }
     }
 }

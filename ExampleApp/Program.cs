@@ -183,7 +183,7 @@ namespace ExampleApp
                 try
                 {
                     var registryHive = new RegistryHive(testFile);
-                    if (registryHive.Header.ValidateCheckSum() == false)
+                    if (registryHive.Header.HasValidateCheckSum() == false)
                     {
                         logger.Warn("CheckSum mismatch!");
                     }
@@ -234,7 +234,7 @@ namespace ExampleApp
                         sb.AppendLine($"Found {registryHive.CellRecords.Count:N0} Cell records (nk: {registryHive.CellRecords.Count(w => w.Value is NkCellRecord):N0}, vk: {registryHive.CellRecords.Count(w => w.Value is VkCellRecord):N0}, sk: {registryHive.CellRecords.Count(w => w.Value is SkCellRecord):N0}, lk: {registryHive.CellRecords.Count(w => w.Value is LkCellRecord):N0})");
                         sb.AppendLine($"Found {registryHive.ListRecords.Count:N0} List records");
                         sb.AppendLine();
-                        sb.AppendLine(string.Format($"Header CheckSums match: {registryHive.Header.ValidateCheckSum()}"));
+                        sb.AppendLine(string.Format($"Header CheckSums match: {registryHive.Header.HasValidateCheckSum()}"));
                         sb.AppendLine(string.Format($"Header sequence 1: {registryHive.Header.PrimarySequenceNumber}, Header sequence 2: {registryHive.Header.SecondarySequenceNumber}"));
 
                         sb.AppendLine();

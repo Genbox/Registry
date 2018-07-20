@@ -146,7 +146,7 @@ namespace Registry.Other
 
         public uint Type { get; }
 
-        public bool ValidateCheckSum()
+        public bool HasValidateCheckSum()
         {
             return CheckSum == CalculatedChecksum;
         }

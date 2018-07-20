@@ -52,6 +52,8 @@ namespace Registry
 
         public bool RecoverDeleted { get; set; }
 
+        public bool IsDirty => Header.PrimarySequenceNumber != Header.SecondarySequenceNumber;
+
         /// <summary>
         ///     Contains all recovered
         /// </summary>
@@ -125,133 +127,69 @@ namespace Registry
             return dn;
         }
 
-        /// <summary>
-        ///     Given a set of Registry transaction logs, apply them in order to an existing hive's data
-        /// </summary>
-        /// <param name="logFiles"></param>
-        /// <param name="updateExistingData"></param>
-        /// <remarks>Hat tip: https://github.com/msuhanov</remarks>
-        /// <returns>Byte array containing the updated bytes</returns>
-        public byte[] ProcessTransactionLogs(List<string> logFiles, bool updateExistingData = false)
+        public bool ProcessTransactionLogs(IList<byte[]> logs)
         {
-            if (logFiles.Count == 0)
-            {
+            if (!logs.Any())
                 throw new Exception("No logs were supplied");
-            }
 
-            if (Header.PrimarySequenceNumber == Header.SecondarySequenceNumber)
+            if (!Header.HasValidateCheckSum())
+                return false;
+
+            if (!IsDirty)
+                return false;
+
+            List<TransactionLog> transactionLogs = new List<TransactionLog>(logs.Count);
+
+            foreach (byte[] b in logs)
             {
-                throw new Exception("Sequence numbers match! Hive is not dirty");
+                TransactionLog log = new TransactionLog(b);
+                transactionLogs.Add(log);
             }
 
-            var logs = new List<TransactionLog>();
+            return ProcessTransactionLogs(transactionLogs);
+        }
 
-            foreach (var ofFileName in logFiles)
-            {
-                var fi = new FileInfo(ofFileName);
-                if (fi.Length == 0)
-                {
-                    continue;
-                }
+        public bool ProcessTransactionLogs(IList<TransactionLog> logs)
+        {
+            if (!logs.Any())
+                throw new Exception("No logs were supplied");
 
-                var transLog = new TransactionLog(ofFileName);
+            if (!Header.HasValidateCheckSum())
+                return false;
 
-                if (HiveType != transLog.HiveType)
-                {
-                    throw new Exception($"Transaction log contains a type ({transLog.HiveType}) that is different from the Registry hive ({HiveType})");
-                }
-
-                if (transLog.Header.PrimarySequenceNumber < Header.SecondarySequenceNumber)
-                {
-                    //log predates the last confirmed update, so skip  
-                    Logger.Warn($"Dropping {ofFileName} because the log's header.PrimarySequenceNumber is less than the hive's header.SecondarySequenceNumber");
-                    continue;
-                }
-
-                transLog.ParseLog();
-
-                logs.Add(transLog);
-            }
+            if (!IsDirty)
+                return false;
 
             var wasUpdated = false;
             var maximumSequenceNumber = 0;
 
-            //get first and second, do the compares
+            var ordered = logs.OrderByDescending(x => x.Header.PrimarySequenceNumber).ToList();
 
-            var logOne = logs.SingleOrDefault(t => t.LogPath.EndsWith("log1", StringComparison.OrdinalIgnoreCase));
-            var logTwo = logs.SingleOrDefault(t => t.LogPath.EndsWith("log2", StringComparison.OrdinalIgnoreCase));
-            TransactionLog soloLog = null;
-
-            if (logOne != null && logTwo != null)
+            for (int i = 0; i < ordered.Count; i++)
             {
-                //both sent in, compare sequence #s for higher of the two
+                TransactionLog transactionLog = ordered[i];
+                transactionLog.ParseLog();
 
-                Logger.Info("Two transaction logs found. Determining primary log...");
-
-                TransactionLog firstLog;
-                TransactionLog secondLog;
-
-                //Find the one with the lower sequence numbers as it contains older data than the other one
-                if (logOne.Header.PrimarySequenceNumber >= logTwo.Header.PrimarySequenceNumber)
+                //if the log's sequence number is higher than the database we replay it
+                if (transactionLog.Header.PrimarySequenceNumber >= Header.SecondarySequenceNumber)
                 {
-                    firstLog = logTwo;
-                    secondLog = logOne;
-                }
-                else
-                {
-                    firstLog = logOne;
-                    secondLog = logTwo;
+                    Logger.Info($"Replaying log file: {transactionLog.LogPath}");
+
+                    //we can replay the log
+                    transactionLog.UpdateHiveBytes(FileBytes);
+                    wasUpdated = true;
                 }
 
-                Logger.Info($"Primary log: {firstLog.LogPath}, secondary log: {secondLog.LogPath}");
+                if (transactionLog.MaximumSequenceNumber > maximumSequenceNumber)
+                    maximumSequenceNumber = transactionLog.MaximumSequenceNumber;
 
-                //start with the first log and replay it.
                 //if second log's primary seq number is one more than firstLogs LAST, replay it as well
-                if (Header.ValidateCheckSum() && firstLog.Header.PrimarySequenceNumber >= Header.SecondarySequenceNumber)
-                {
-                    Logger.Info($"Replaying log file: {firstLog.LogPath}");
-
-                    //we can replay the log
-                    firstLog.UpdateHiveBytes(FileBytes);
-                    wasUpdated = true;
-                }
-                else
-                {
-                    secondLog.UpdateHiveBytes(FileBytes);
-                    wasUpdated = true;
-                }
-
-                maximumSequenceNumber = firstLog.TransactionLogEntries.Max(t => t.SequenceNumber);
-
-                if (secondLog.Header.PrimarySequenceNumber == maximumSequenceNumber + 1 && secondLog.Header.PrimarySequenceNumber > Header.SecondarySequenceNumber)
-                {
-                    Logger.Info($"Replaying log file: {secondLog.LogPath}");
-                    secondLog.UpdateHiveBytes(FileBytes);
-                    maximumSequenceNumber = secondLog.TransactionLogEntries.Max(t => t.SequenceNumber);
-                }
-            }
-            else if (logOne != null)
-            {
-                soloLog = logOne;
-            }
-            else if (logTwo != null)
-            {
-                soloLog = logTwo;
-            }
-
-            if (soloLog != null)
-            {
-                Logger.Info($"Single log file available: {soloLog.LogPath}");
-
-                if (Header.ValidateCheckSum() && soloLog.Header.PrimarySequenceNumber >= Header.SecondarySequenceNumber)
-                {
-                    Logger.Info($"Replaying log file: {soloLog.LogPath}");
-
-                    //we can replay the log
-                    soloLog.UpdateHiveBytes(FileBytes);
-                    maximumSequenceNumber = soloLog.TransactionLogEntries.Max(t => t.SequenceNumber);
-                    wasUpdated = true;
-                }
+                //if (secondLog.Header.PrimarySequenceNumber == maximumSequenceNumber + 1 && secondLog.Header.PrimarySequenceNumber > Header.SecondarySequenceNumber)
+                //{
+                //    Logger.Info($"Replaying log file: {secondLog.LogPath}");
+                //    secondLog.UpdateHiveBytes(FileBytes);
+                //    maximumSequenceNumber = secondLog.TransactionLogEntries.Max(t => t.SequenceNumber);
+                //}
             }
 
             if (wasUpdated)
@@ -263,14 +201,54 @@ namespace Registry
                 Buffer.BlockCopy(seqBytes, 0, FileBytes, 0x8, 0x4); //Secondary #
 
                 Logger.Info($"At least one transaction log was applied. Sequence numbers have been updated to 0x{maximumSequenceNumber:X4}");
-            }
 
-            if (updateExistingData)
-            {
                 Initialize(); //reprocess header
             }
 
-            return FileBytes;
+            return wasUpdated;
+        }
+
+        /// <summary>
+        ///     Given a set of Registry transaction logs, apply them in order to an existing hive's data
+        /// </summary>
+        /// <remarks>Hat tip: https://github.com/msuhanov </remarks>
+        /// <returns>Byte array containing the updated bytes</returns>
+        public bool ProcessTransactionLogs(List<string> logFiles)
+        {
+            if (logFiles.Count == 0)
+                throw new Exception("No logs were supplied");
+
+            if (!Header.HasValidateCheckSum())
+                return false;
+
+            if (!IsDirty)
+                return false;
+
+            var transactionLogs = new List<TransactionLog>(logFiles.Count);
+
+            foreach (var logFile in logFiles)
+            {
+                var fi = new FileInfo(logFile);
+
+                if (fi.Length == 0)
+                    continue;
+
+                var transLog = new TransactionLog(logFile);
+
+                if (HiveType != transLog.HiveType)
+                    throw new Exception($"Transaction log contains a type ({transLog.HiveType}) that is different from the Registry hive ({HiveType})");
+
+                if (transLog.Header.PrimarySequenceNumber < Header.SecondarySequenceNumber)
+                {
+                    //log predates the last confirmed update, so skip  
+                    Logger.Warn($"Dropping {logFile} because the log's header.PrimarySequenceNumber is less than the hive's header.SecondarySequenceNumber");
+                    continue;
+                }
+
+                transactionLogs.Add(transLog);
+            }
+
+            return ProcessTransactionLogs(transactionLogs);
         }
 
         //TODO this needs refactored to remove duplicated code
@@ -685,12 +663,10 @@ namespace Registry
             return null;
         }
 
-        public bool ParseHive()
+        public void ParseHive()
         {
             if (_parsed)
-            {
-                throw new Exception("ParseHive already called");
-            }
+                return;
 
             TotalBytesRead = 0;
 
@@ -868,7 +844,6 @@ namespace Registry
             }
 
             _parsed = true;
-            return true;
         }
 
         /// <summary>

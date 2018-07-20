@@ -293,7 +293,7 @@ namespace Registry.Test
             Check.That(sam.Header.MinorVersion).IsStrictlyGreaterThan(0);
             Check.That(sam.Header.RootCellOffset).IsStrictlyGreaterThan(0);
             Check.That(sam.Header.CalculatedChecksum).Equals(sam.Header.CheckSum);
-            Check.That(sam.Header.ValidateCheckSum()).Equals(true);
+            Check.That(sam.Header.HasValidateCheckSum()).Equals(true);
             Check.That(sam.Header.ToString()).IsNotEmpty();
         }
     }
